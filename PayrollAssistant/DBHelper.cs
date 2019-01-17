@@ -35,6 +35,18 @@ namespace PayrollAssistant
             if (DB != null)
             {
                 DB.Open();
+                SQLiteCommand CMD = new SQLiteCommand(DB);
+                CMD.CommandText = "select * from " + TABLE_NAME;
+                try
+                {
+                    CMD.ExecuteNonQuery();
+                }
+                catch (Exception e) {
+                    string sql = "CREATE TABLE Работники (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,Имя VARCHAR(50)  NULL,ДатаПоступления VARCHAR  NULL,Группа VARCHAR  NULL,Подчиненные VARCHAR  NULL,Начальник VARCHAR  NULL)";
+                    SQLiteCommand command = new SQLiteCommand(sql, DB);
+                    command.ExecuteNonQuery();
+                }
+               
             }
             else
             {
