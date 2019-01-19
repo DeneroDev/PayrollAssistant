@@ -32,7 +32,7 @@ namespace PayrollAssistant
 
         public Worker GetWorkerByID(int id) {
             for (int i = 0; i < workers.Count; i++) {
-                if (workers[i].GetID() == id) {
+                if (workers[i].Id == id) {
                     return workers[i];
                 }
             }
@@ -43,7 +43,7 @@ namespace PayrollAssistant
         {
             for (int i = 0; i < workers.Count; i++)
             {
-                if (workers[i].GetName() == name)
+                if (workers[i].Name == name)
                 {
                     return workers[i];
                 }

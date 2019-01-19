@@ -23,40 +23,21 @@ namespace PayrollAssistant
 
         public List<string> Idssubb { get => idssubb; set => idssubb = value; }
         public string Idchief { get => idchief; set => idchief = value; }
+        public string Name { get => name; set => name = value; }
+        internal Group CurrentGroup { get => currentGroup; set => currentGroup = value; }
+        internal List<Worker> Subbordinate { get => subbordinate; set => subbordinate = value; }
+        public int Id { get => id; set => id = value; }
+        internal Worker Chief { get => chief; set => chief = value; }
+        public DateTime Date { get => date; set => date = value; }
 
-    
-
-        abstract protected float Payroll(DateTime PayrollDateStart, DateTime PayrollDateEnd);
-
-
-        public string GetName() {
-            return name;
-        }
-        protected void SetName(string name)
-        {
-            this.name = name;
+        protected virtual float Payroll(DateTime PayrollDateStart, DateTime PayrollDateEnd) {
+            return 0;
         }
 
-
-
-        public DateTime GetDate()
-        {
-            return date;
-        }
-        protected void SetDate(DateTime date)
-        {
-            this.date = date;
+        public virtual float GetPayroll(DateTime PayrollDateStart, DateTime PayrollDateEnd) {
+            return Payroll(PayrollDateStart, PayrollDateEnd);
         }
 
-
-        public Group GetCurrentGroup()
-        {
-            return currentGroup;
-        }
-        protected void SetCurrentGroup(Group group)
-        {
-            currentGroup = group;
-        }
 
         protected float CalculateSpendDay(DateTime PayrollDateStart, DateTime PayrollDateEnd)
         {
@@ -77,31 +58,23 @@ namespace PayrollAssistant
 
         }
 
-        public Worker GetChief()
-        {
-            return chief;
-        }
-
+    
         public void SetChief(Worker chief)
         {
-            this.chief = chief;
-            chief.AddSub(this);
+            if (chief != null) {
+                Chief = chief;
+                chief.AddSub(this);
+            }
         }
 
 
-        public List<Worker> GetSubbordinate()
-        {
-            return subbordinate;
-        }
 
-        protected void InitIdsSubList() {
-            idssubb = new List<string>();
-        }
+
+     
 
         protected void AddSubordinate(Worker sub)
         {
-            Console.WriteLine(sub.GetName() + "СЛУГА");
-            subbordinate.Add(sub);
+            Subbordinate.Add(sub);
         }
 
       
@@ -112,50 +85,33 @@ namespace PayrollAssistant
         }
         public void AddSub(Worker sub)
         {
-            if (Group.Employee != GetCurrentGroup())
+            if (Group.Employee != CurrentGroup)
                 AddSubordinate(sub);
         }
 
-      
-
-
-       
-
-        public int GetID() {
-            return id;
-        }
-
-        protected void SetID(int id) {
-            this.id = id;
-        }
-
-
         public int GetCountAllSubordinate()
         {
-            return subbordinate.Count();
+            return Subbordinate.Count();
         }
         public int GetCountEmployeeSubordinate()
         {
             int count = 0;
-            for (int i = 0; i < subbordinate.Count(); i++)
+            for (int i = 0; i < Subbordinate.Count(); i++)
             {
-                if (subbordinate[i].GetCurrentGroup() == Group.Employee)
+                if (Subbordinate[i].CurrentGroup == Group.Employee)
                     count++;
             }
             return count;
         }
 
-        protected void SetSubordinate()
-        {
-            subbordinate = new List<Worker>();
-        }
+      
 
         public int GetCountManagerSubordinate()
         {
             int count = 0;
-            for (int i = 0; i < subbordinate.Count(); i++)
+            for (int i = 0; i < Subbordinate.Count(); i++)
             {
-                if (subbordinate[i].GetCurrentGroup() == Group.Manager)
+                if (Subbordinate[i].CurrentGroup == Group.Manager)
                     count++;
             }
             return count;

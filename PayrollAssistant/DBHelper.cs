@@ -83,10 +83,31 @@ namespace PayrollAssistant
                     if (drow.RowState != DataRowState.Deleted)
                     {
                         Enum.TryParse(drow["Группа"].ToString(), out Worker.Group currentGroup);
-
-                        CurrentWorker worker = new CurrentWorker(int.Parse(drow["ID"].ToString()), drow["Имя"].ToString()
+                        Worker worker;
+                        switch (currentGroup) {
+                            case Worker.Group.Employee:
+                              worker = new Employee(int.Parse(drow["ID"].ToString()), drow["Имя"].ToString()
                        , DateTime.Parse(drow["ДатаПоступления"].ToString())
                        , currentGroup);
+                                break;
+                            case Worker.Group.Manager:
+                                worker = new Manager(int.Parse(drow["ID"].ToString()), drow["Имя"].ToString()
+                       , DateTime.Parse(drow["ДатаПоступления"].ToString())
+                       , currentGroup);
+                                break;
+                            case Worker.Group.Salesman:
+                                worker = new Salesman(int.Parse(drow["ID"].ToString()), drow["Имя"].ToString()
+                       , DateTime.Parse(drow["ДатаПоступления"].ToString())
+                       , currentGroup);
+                                break;
+                            default:
+                                worker = new Employee(int.Parse(drow["ID"].ToString()), drow["Имя"].ToString()
+                      , DateTime.Parse(drow["ДатаПоступления"].ToString())
+                      , currentGroup);
+                                break;
+                        }
+              
+             
                         
                         CasheAllWolkerHelper.GetInstance().AddWorker(worker);
                         if (drow["Подчиненные"].ToString() != "") {
@@ -123,33 +144,12 @@ namespace PayrollAssistant
             SQLiteCommand CMD = DB.CreateCommand();
             CMD.CommandText = "insert into "+TABLE_NAME+"(Имя,ДатаПоступления,Группа,Подчиненные,Начальник)" +
                 " values( @name , @date , @group , @subordinate , @chief )";
-            CMD.Parameters.Add("@name", DbType.String).Value = worker.GetName();
-            CMD.Parameters.Add("@date", DbType.String).Value = worker.GetDate().ToShortDateString();
-            CMD.Parameters.Add("@group", DbType.String).Value = worker.GetCurrentGroup().ToString();
-
-            if (worker.GetSubbordinate() != null) {
-                string summ = "";
-                int countSubb = worker.GetSubbordinate().Count;
-                for (int i = 0; i < countSubb; i++) {
-                    if ((i + 1) < countSubb)
-                        summ += worker.GetSubbordinate()[i].GetID().ToString() + ",";
-                    else
-                        summ += worker.GetSubbordinate()[i].GetID().ToString();
-                }
-                  
-              //  Console.WriteLine(summ + "-SUM_SPLIT");
-                CMD.Parameters.Add("@subordinate", DbType.String).Value = summ;
-            }
-            else
-                CMD.Parameters.Add("@subordinate", DbType.String).Value = "-";
-
-            if (worker.GetChief()!=null)
-                CMD.Parameters.Add("@chief", DbType.String).Value = worker.GetChief().GetID();
-            else
-                CMD.Parameters.Add("@chief", DbType.String).Value = "-";
-
+            CMD.Parameters.Add("@name", DbType.String).Value = worker.Name;
+            CMD.Parameters.Add("@date", DbType.String).Value = worker.Date.ToShortDateString();
+            CMD.Parameters.Add("@group", DbType.String).Value = worker.CurrentGroup.ToString();
+            CMD.Parameters.Add("@subordinate", DbType.String).Value = SubordinateConcatenation(worker);
+            CMD.Parameters.Add("@chief", DbType.String).Value = CheckAvailabilityChief(worker);
             CMD.ExecuteNonQuery();
-
         }
 
         public Worker GetWorkerUseID(int id) {
@@ -173,5 +173,53 @@ namespace PayrollAssistant
            
         }
 
+
+        public void UpdateWorker(Worker updateWorker) {
+            SQLiteCommand CMD = DB.CreateCommand();
+            
+            CMD.CommandText = "update " + TABLE_NAME + " set Имя = @name, ДатаПоступления = @date, Группа = @group, Подчиненные = @subordinate, Начальник = @chief where ID = @id";
+            CMD.Parameters.Add("@id", DbType.String).Value = updateWorker.Id;
+            CMD.Parameters.Add("@name", DbType.String).Value = updateWorker.Name;
+            CMD.Parameters.Add("@date", DbType.String).Value = updateWorker.Date.ToShortDateString();
+            CMD.Parameters.Add("@group", DbType.String).Value = updateWorker.CurrentGroup.ToString();
+            CMD.Parameters.Add("@subordinate", DbType.String).Value = SubordinateConcatenation(updateWorker);
+            CMD.Parameters.Add("@chief", DbType.String).Value = CheckAvailabilityChief(updateWorker);
+            Console.WriteLine($"ID: {updateWorker.Id} / Name:{updateWorker.Name} /");
+            CMD.ExecuteNonQuery();
+        }
+
+        public void DeleteWorker(Worker deleteWorker)
+        {
+            SQLiteCommand CMD = DB.CreateCommand();
+            CMD.CommandText = "delete from " + TABLE_NAME + " where ID = @id";
+            CMD.Parameters.Add("@id", DbType.String).Value = deleteWorker.Id;
+            CMD.ExecuteNonQuery();
+        }
+
+        private string SubordinateConcatenation(Worker worker) {
+            if (worker.Subbordinate != null)
+            {
+                string summ = "";
+                int countSubb = worker.Subbordinate.Count;
+                for (int i = 0; i < countSubb; i++)
+                {
+                    if ((i + 1) < countSubb)
+                        summ += worker.Subbordinate[i].Id.ToString() + ",";
+                    else
+                        summ += worker.Subbordinate[i].Id.ToString();
+                }
+                return summ;          
+            }
+            else
+                return "-";
+        }
+
+
+        private string CheckAvailabilityChief(Worker worker) {
+            if (worker.Chief != null)
+                return worker.Chief.Id.ToString();
+            else
+                return "-";
+        }
     }
 }

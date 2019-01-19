@@ -36,14 +36,14 @@ namespace PayrollAssistant
         private void LoadAllWorker() {
             List<Worker> workers = CasheAllWolkerHelper.GetInstance().GetAllWorker();
             for (int i = 0; i < workers.Count; i++) {
-                ListViewItem lvi = new ListViewItem(workers[i].GetID().ToString());
-                lvi.SubItems.Add(workers[i].GetName());
-                lvi.SubItems.Add(workers[i].GetDate().ToShortDateString());
-                lvi.SubItems.Add(workers[i].GetCurrentGroup().ToString());
+                var lvi = new ListViewItem(workers[i].Id.ToString());
+                lvi.SubItems.Add(workers[i].Name);
+                lvi.SubItems.Add(workers[i].Date.ToShortDateString());
+                lvi.SubItems.Add(workers[i].CurrentGroup.ToString());
                 lvi.SubItems.Add("-");
                 lvi.SubItems.Add(workers[i].GetCountAllSubordinate().ToString());
-                if(workers[i].GetChief()!=null)
-                    lvi.SubItems.Add(workers[i].GetChief().GetName());
+                if(workers[i].Chief!=null)
+                    lvi.SubItems.Add(workers[i].Chief.Name);
                 else
                     lvi.SubItems.Add("-");
 
@@ -56,8 +56,11 @@ namespace PayrollAssistant
         {
             for (int i = 0; i < listView1.SelectedItems.Count; i++) {
                 ListViewSubItemCollection subItems = listView1.SelectedItems[i].SubItems;
-                CurrentWorker cw = (CurrentWorker)CasheAllWolkerHelper.GetInstance()
-                    .GetWorkerByID(int.Parse(subItems[0].Text));
+                var cw = CasheAllWolkerHelper.GetInstance()
+                     .GetWorkerByID(int.Parse(subItems[0].Text));
+                //Worker cw = group.CurrentGroup.Equals(Worker.Group.Employee) ? (Employee)group
+                //    : (group.CurrentGroup.Equals(Worker.Group.Manager)) ? (Manager)group
+                //    : (group.CurrentGroup.Equals(Worker.Group.Salesman)) ? (Salesman)group : group;
                 float salary = cw.GetPayroll(DateTime.Parse(dateTimePicker1.Value.Date.ToShortDateString()),
                     (DateTime.Parse(dateTimePicker2.Value.Date.ToShortDateString())));
                 if (salary == 0)
@@ -86,10 +89,10 @@ namespace PayrollAssistant
                 ListViewSubItemCollection subItems = listView1.SelectedItems[i].SubItems;
                 Worker cw = CasheAllWolkerHelper.GetInstance()
                    .GetWorkerByID(int.Parse(subItems[0].Text));
-                if (cw.GetSubbordinate() != null) {
-                    SubListBox.Items.Add("-----------"+cw.GetName()+"-----------");
+                if (cw.Subbordinate != null) {
+                    SubListBox.Items.Add("-----------"+cw.Name+"-----------");
                     for (int j = 0; j < cw.GetCountAllSubordinate(); j++) {
-                        SubListBox.Items.Add(cw.GetSubbordinate()[j].GetName());
+                        SubListBox.Items.Add(cw.Subbordinate[j].Name);
                     }
                 }
             }
@@ -100,9 +103,16 @@ namespace PayrollAssistant
 
         private void UpdateBtn_Click(object sender, EventArgs e)
         {
-            listView1.Items.Clear();
-            DBHelper.GetInstance().LoadAllElementDB();
-            LoadAllWorker();
+            if (listView1.SelectedItems.Count > 0) {
+                var udf = new UpdateWorkerForm(listView1.SelectedItems[0].SubItems[0].Text);
+                udf.ShowDialog();
+                if (udf.DialogResult == DialogResult.OK)
+                {
+                    listView1.Items.Clear();
+                    DBHelper.GetInstance().LoadAllElementDB();
+                    LoadAllWorker();
+                }
+            }
         }
 
         private void AllWorkerCalculate_Click(object sender, EventArgs e)
@@ -110,8 +120,11 @@ namespace PayrollAssistant
             for (int i = 0; i < listView1.Items.Count; i++)
             {
                 ListViewSubItemCollection subItems = listView1.Items[i].SubItems;
-                CurrentWorker cw = (CurrentWorker)CasheAllWolkerHelper.GetInstance()
+                Worker group = CasheAllWolkerHelper.GetInstance()
                     .GetWorkerByID(int.Parse(subItems[0].Text));
+                Worker cw = group.CurrentGroup.Equals(Worker.Group.Employee) ? (Employee)group
+                    : (group.CurrentGroup.Equals(Worker.Group.Manager)) ? (Manager)group
+                    : (group.CurrentGroup.Equals(Worker.Group.Salesman)) ? (Salesman)group : group;
                 float salary = cw.GetPayroll(DateTime.Parse(dateTimePicker1.Value.Date.ToShortDateString()),
                     (DateTime.Parse(dateTimePicker2.Value.Date.ToShortDateString())));
                 if (salary == 0)
@@ -119,6 +132,17 @@ namespace PayrollAssistant
                 else
                     subItems[4].Text = salary.ToString();
             }
+        }
+
+        private void DeleteBtn_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < listView1.SelectedItems.Count; i++) {
+                var worker = CasheAllWolkerHelper.GetInstance().GetWorkerByID(int.Parse(listView1.SelectedItems[i].SubItems[0].Text));
+                DBHelper.GetInstance().DeleteWorker(worker);
+            }
+            listView1.Items.Clear();
+            DBHelper.GetInstance().LoadAllElementDB();
+            LoadAllWorker();
         }
     }
 }

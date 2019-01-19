@@ -25,8 +25,8 @@ namespace PayrollAssistant
         private void LoadAllChiefToList() {
             List<Worker> workers = CasheAllWolkerHelper.GetInstance().GetAllWorker();
             for (int i = 0; i < workers.Count; i++) {
-                if (workers[i].GetCurrentGroup() != Worker.Group.Employee)
-                    ChiefListBox.Items.Add(workers[i].GetName());
+                if (workers[i].CurrentGroup != Worker.Group.Employee)
+                    ChiefListBox.Items.Add(workers[i].Name);
             }
         }
 
@@ -35,7 +35,7 @@ namespace PayrollAssistant
         {
             if (FIOTextBox.Text != "" && GroupListBox.SelectedItem != null) {
                 Enum.TryParse(GroupListBox.SelectedItem.ToString(), out Worker.Group currentGroup);
-                CurrentWorker nc = new CurrentWorker(0,
+                var nc = new CurrentWorker(0,
                      FIOTextBox.Text, DateTime.Parse(dateTimePicker1.Value.Date.ToShortDateString()),
                      currentGroup);
 

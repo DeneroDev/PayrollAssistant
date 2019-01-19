@@ -46,6 +46,7 @@
             this.SubListBox = new System.Windows.Forms.ListBox();
             this.UpdateBtn = new System.Windows.Forms.Button();
             this.AllWorkerCalculate = new System.Windows.Forms.Button();
+            this.DeleteBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // AddWorkerBtn
@@ -104,7 +105,7 @@
             // 
             // SubordinatesColumn
             // 
-            this.SubordinatesColumn.Text = "Подчиненные(ID)";
+            this.SubordinatesColumn.Text = "Подчиненные Кол-во";
             this.SubordinatesColumn.Width = 137;
             // 
             // ChiefColumn
@@ -192,12 +193,23 @@
             this.AllWorkerCalculate.UseVisualStyleBackColor = true;
             this.AllWorkerCalculate.Click += new System.EventHandler(this.AllWorkerCalculate_Click);
             // 
+            // DeleteBtn
+            // 
+            this.DeleteBtn.Location = new System.Drawing.Point(184, 136);
+            this.DeleteBtn.Name = "DeleteBtn";
+            this.DeleteBtn.Size = new System.Drawing.Size(75, 23);
+            this.DeleteBtn.TabIndex = 11;
+            this.DeleteBtn.Text = "Delete";
+            this.DeleteBtn.UseVisualStyleBackColor = true;
+            this.DeleteBtn.Click += new System.EventHandler(this.DeleteBtn_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.DeleteBtn);
             this.Controls.Add(this.AllWorkerCalculate);
             this.Controls.Add(this.UpdateBtn);
             this.Controls.Add(this.SubListBox);
@@ -238,6 +250,7 @@
         private System.Windows.Forms.ListBox SubListBox;
         private System.Windows.Forms.Button UpdateBtn;
         private System.Windows.Forms.Button AllWorkerCalculate;
+        private System.Windows.Forms.Button DeleteBtn;
     }
 }
 

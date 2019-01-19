@@ -88,6 +88,15 @@
     <Compile Include="AllConstate.cs" />
     <Compile Include="CasheAllWolkerHelper.cs" />
     <Compile Include="CurrentWorker.cs" />
+    <Compile Include="Employee.cs" />
+    <Compile Include="Manager.cs" />
+    <Compile Include="Salesman.cs" />
+    <Compile Include="UpdateWorkerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateWorkerForm.Designer.cs">
+      <DependentUpon>UpdateWorkerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Worker.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Form1.cs">
@@ -113,6 +122,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UpdateWorkerForm.resx">
+      <DependentUpon>UpdateWorkerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
