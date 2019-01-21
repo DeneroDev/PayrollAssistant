@@ -69,7 +69,7 @@ namespace PayrollAssistant
         public void LoadAllElementDB() {
             if (DB != null)
             {
-                CasheAllWolkerHelper.GetInstance().ClearAllWorker();
+                CasheAllWorkerHelper.GetInstance().ClearAllWorker();
                 SQLiteCommand CMD = DB.CreateCommand();
                 CMD.CommandText = "select * from " + TABLE_NAME;
                 // SQLiteDataReader dr = CMD.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
@@ -109,7 +109,7 @@ namespace PayrollAssistant
               
              
                         
-                        CasheAllWolkerHelper.GetInstance().AddWorker(worker);
+                        CasheAllWorkerHelper.GetInstance().AddWorker(worker);
                         if (drow["Подчиненные"].ToString() != "") {
                             string[] ids = drow["Подчиненные"].ToString().Split(',');
                             for (int j = 0; j < ids.Length; j++) {
@@ -124,7 +124,7 @@ namespace PayrollAssistant
                     }
                 }
 
-                CasheAllWolkerHelper.GetInstance().CalculateChiefAndSub();
+                CasheAllWorkerHelper.GetInstance().CalculateChiefAndSub();
             }
         }
 

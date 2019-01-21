@@ -23,7 +23,7 @@ namespace PayrollAssistant
         }
 
         private void LoadAllChiefToList() {
-            List<Worker> workers = CasheAllWolkerHelper.GetInstance().GetAllWorker();
+            List<Worker> workers = CasheAllWorkerHelper.GetInstance().GetAllWorker();
             for (int i = 0; i < workers.Count; i++) {
                 if (workers[i].CurrentGroup != Worker.Group.Employee)
                     ChiefListBox.Items.Add(workers[i].Name);
@@ -41,7 +41,7 @@ namespace PayrollAssistant
 
                 if (ChiefListBox.SelectedItems.Count>0)
                 {
-                    nc.UpdateChief(CasheAllWolkerHelper.GetInstance().GetWorkerByName(ChiefListBox.SelectedItem.ToString()));
+                    nc.UpdateChief(CasheAllWorkerHelper.GetInstance().GetWorkerByName(ChiefListBox.SelectedItem.ToString()));
                 }
              
                DBHelper.GetInstance().AddWorker(nc);

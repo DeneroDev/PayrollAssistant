@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace PayrollAssistant
 {
-    class CasheAllWolkerHelper
+    class CasheAllWorkerHelper
     {
-        CasheAllWolkerHelper() {
+        CasheAllWorkerHelper() {
             workers = new List<Worker>();
         }
-        public static CasheAllWolkerHelper instance;
-        public static CasheAllWolkerHelper GetInstance() {
+        public static CasheAllWorkerHelper instance;
+        public static CasheAllWorkerHelper GetInstance() {
             if (instance == null)
-                instance = new CasheAllWolkerHelper();
+                instance = new CasheAllWorkerHelper();
             return instance;
         }
 

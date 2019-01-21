@@ -86,7 +86,7 @@
       <DependentUpon>AddWorkerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AllConstate.cs" />
-    <Compile Include="CasheAllWolkerHelper.cs" />
+    <Compile Include="CasheAllWorkerHelper.cs" />
     <Compile Include="CurrentWorker.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Manager.cs" />

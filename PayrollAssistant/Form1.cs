@@ -22,7 +22,7 @@ namespace PayrollAssistant
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            DBHelper.GetInstance().SaveResult(CasheAllWolkerHelper.GetInstance().GetAllWorker());
+            DBHelper.GetInstance().SaveResult(CasheAllWorkerHelper.GetInstance().GetAllWorker());
             DBHelper.GetInstance().CloseDB();
         }
 
@@ -34,7 +34,7 @@ namespace PayrollAssistant
         }
 
         private void LoadAllWorker() {
-            List<Worker> workers = CasheAllWolkerHelper.GetInstance().GetAllWorker();
+            List<Worker> workers = CasheAllWorkerHelper.GetInstance().GetAllWorker();
             for (int i = 0; i < workers.Count; i++) {
                 var lvi = new ListViewItem(workers[i].Id.ToString());
                 lvi.SubItems.Add(workers[i].Name);
@@ -56,7 +56,7 @@ namespace PayrollAssistant
         {
             for (int i = 0; i < listView1.SelectedItems.Count; i++) {
                 ListViewSubItemCollection subItems = listView1.SelectedItems[i].SubItems;
-                var cw = CasheAllWolkerHelper.GetInstance()
+                var cw = CasheAllWorkerHelper.GetInstance()
                      .GetWorkerByID(int.Parse(subItems[0].Text));
                 //Worker cw = group.CurrentGroup.Equals(Worker.Group.Employee) ? (Employee)group
                 //    : (group.CurrentGroup.Equals(Worker.Group.Manager)) ? (Manager)group
@@ -87,7 +87,7 @@ namespace PayrollAssistant
             for (int i = 0; i < listView1.SelectedItems.Count; i++)
             {
                 ListViewSubItemCollection subItems = listView1.SelectedItems[i].SubItems;
-                Worker cw = CasheAllWolkerHelper.GetInstance()
+                Worker cw = CasheAllWorkerHelper.GetInstance()
                    .GetWorkerByID(int.Parse(subItems[0].Text));
                 if (cw.Subbordinate != null) {
                     SubListBox.Items.Add("-----------"+cw.Name+"-----------");
@@ -120,7 +120,7 @@ namespace PayrollAssistant
             for (int i = 0; i < listView1.Items.Count; i++)
             {
                 ListViewSubItemCollection subItems = listView1.Items[i].SubItems;
-                Worker group = CasheAllWolkerHelper.GetInstance()
+                Worker group = CasheAllWorkerHelper.GetInstance()
                     .GetWorkerByID(int.Parse(subItems[0].Text));
                 Worker cw = group.CurrentGroup.Equals(Worker.Group.Employee) ? (Employee)group
                     : (group.CurrentGroup.Equals(Worker.Group.Manager)) ? (Manager)group
@@ -137,7 +137,7 @@ namespace PayrollAssistant
         private void DeleteBtn_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < listView1.SelectedItems.Count; i++) {
-                var worker = CasheAllWolkerHelper.GetInstance().GetWorkerByID(int.Parse(listView1.SelectedItems[i].SubItems[0].Text));
+                var worker = CasheAllWorkerHelper.GetInstance().GetWorkerByID(int.Parse(listView1.SelectedItems[i].SubItems[0].Text));
                 DBHelper.GetInstance().DeleteWorker(worker);
             }
             listView1.Items.Clear();

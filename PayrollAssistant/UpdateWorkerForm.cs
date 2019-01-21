@@ -22,7 +22,7 @@ namespace PayrollAssistant
 
         private void LoadAllChiefToList()
         {
-            List<Worker> workers = CasheAllWolkerHelper.GetInstance().GetAllWorker();
+            List<Worker> workers = CasheAllWorkerHelper.GetInstance().GetAllWorker();
             for (int i = 0; i < workers.Count; i++)
             {
                 Console.WriteLine($"{workers[i].Id}/{int.Parse(IdLabel.Text)}");
@@ -35,10 +35,10 @@ namespace PayrollAssistant
         {
             if (FIOTextBox.Text != "" && GroupListBox.SelectedItem != null)
             {
-                var nc = CasheAllWolkerHelper.GetInstance().GetWorkerByID(int.Parse(IdLabel.Text));
+                var nc = CasheAllWorkerHelper.GetInstance().GetWorkerByID(int.Parse(IdLabel.Text));
                 if (ChiefListBox.SelectedItems.Count > 0)
                 {
-                    nc.UpdateChief(CasheAllWolkerHelper.GetInstance().GetWorkerByName(ChiefListBox.SelectedItem.ToString()));
+                    nc.UpdateChief(CasheAllWorkerHelper.GetInstance().GetWorkerByName(ChiefListBox.SelectedItem.ToString()));
                 }
                 else
                     nc.Chief = null;
